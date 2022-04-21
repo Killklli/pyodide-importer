@@ -2,6 +2,7 @@ from importlib.abc import MetaPathFinder
 from _frozen_importlib_external import PathFinder
 import sys
 import pathlib
+import time
 import warnings
 from typing import List, Any, Union, Iterable
 
@@ -113,8 +114,9 @@ class PyHTTPFinder(PyFinder):
         Download python script through HTTP(s)
         """
         if PYODIDE:
+            milliseconds = int(round(time.time() * 1000))
             req = XMLHttpRequest.new()
-            req.open("GET", url, False)
+            req.open("GET", f"{url}?curtime={milliseconds}", False)
             req.send(None)
             return (req.status, req.responseText)
         else:
